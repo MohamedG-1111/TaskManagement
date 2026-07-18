@@ -1,4 +1,7 @@
 
+using TaskManagement.Application;
+using TaskManagement.Infrastructure;
+
 namespace TaskManagement.Api
 {
     public class Program
@@ -9,9 +12,9 @@ namespace TaskManagement.Api
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddPresentation()
+                .AddApplication()
+                .AddInfrastructure();
 
             var app = builder.Build();
 
