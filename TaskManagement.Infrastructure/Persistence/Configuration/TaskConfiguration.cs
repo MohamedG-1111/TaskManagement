@@ -32,7 +32,7 @@ namespace TaskManagement.Infrastructure.Persistence.Configuration
                    .IsRequired();
 
             builder.HasOne(t => t.Project)
-                   .WithMany(p => p.ProjectTasks)
+                   .WithMany()
                    .HasForeignKey(t => t.ProjectId)
                    .OnDelete(DeleteBehavior.Restrict);
         }

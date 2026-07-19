@@ -9,5 +9,10 @@
         public DateTimeOffset? UpdatedAt { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        protected BaseEntity()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

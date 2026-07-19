@@ -30,10 +30,6 @@ namespace TaskManagement.Infrastructure.Persistence.Configuration
                    .HasConversion<string>()
                    .IsRequired();
 
-            builder.HasMany(p => p.ProjectTasks)
-                   .WithOne(t => t.Project)
-                   .HasForeignKey(t => t.ProjectId)
-                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
