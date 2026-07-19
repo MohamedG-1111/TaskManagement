@@ -93,13 +93,25 @@ namespace TaskManagement.Domain.Entities
         }
 
 
-        public void EnsureCanAddTask(DateTimeOffset taskDueDate)
+        public void EnsureCanAddTask(
+     DateTimeOffset taskStartDate,
+     DateTimeOffset taskDueDate)
         {
             if (Status is ProjectStatus.Completed or ProjectStatus.Archived)
-                throw new InvalidOperationException("Cannot add tasks to a completed or archived project.");
+                throw new InvalidOperationException(
+                    "Cannot add tasks to a completed or archived project.");
+
+            if (taskStartDate < StartDate)
+                throw new InvalidOperationException(
+                    "Task start date cannot be before the project start date.");
 
             if (taskDueDate > EndDate)
-                throw new InvalidOperationException("Task due date cannot exceed the project's end date.");
+                throw new InvalidOperationException(
+                    "Task due date cannot be after the project end date.");
+
+            if (taskDueDate <= taskStartDate)
+                throw new InvalidOperationException(
+                    "Task due date must be after its start date.");
         }
 
         public void EnsureCanModifyTasks()
