@@ -1,6 +1,6 @@
 
 using TaskManagement.Application;
-using TaskManagement.Infrastructure;
+using TaskManagement.Infrastructure.Extensions;
 
 namespace TaskManagement.Api
 {
