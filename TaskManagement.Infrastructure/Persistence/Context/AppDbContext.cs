@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskManagement.Domain.Common;
+using TaskManagement.Domain.Common.Baseentity;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infrastructure.Identity;
 using TaskManagement.Infrastructure.Persistence.Configuration;

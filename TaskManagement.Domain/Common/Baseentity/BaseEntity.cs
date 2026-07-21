@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.Domain.Common
+﻿namespace TaskManagement.Domain.Common.Baseentity
 {
     public abstract class BaseEntity
     {

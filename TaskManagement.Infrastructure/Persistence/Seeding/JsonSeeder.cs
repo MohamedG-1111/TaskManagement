@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using TaskManagement.Domain.Common;
+using TaskManagement.Domain.Common.Baseentity;
 
 namespace TaskManagement.Infrastructure.Persistence.Seeding
 {

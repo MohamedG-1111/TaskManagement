@@ -1,4 +1,3 @@
-
 using TaskManagement.Application;
 using TaskManagement.Infrastructure.Extensions;
 
@@ -20,6 +19,11 @@ namespace TaskManagement.Api
                 .AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
+            app.MapGet("/error", (HttpContext context) =>
+            {
+                throw new Exception("Test sql");
+            });
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -1,4 +1,4 @@
-﻿using TaskManagement.Domain.Common;
+﻿using TaskManagement.Domain.Common.Baseentity;
 using TaskManagement.Domain.Enums;
 using TaskStatus = TaskManagement.Domain.Enums.TaskStatus;
 

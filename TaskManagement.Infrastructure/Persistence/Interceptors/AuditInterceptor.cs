@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TaskManagement.Application.Abstractions.Identity;
-using TaskManagement.Domain.Common;
+using TaskManagement.Domain.Common.Baseentity;
 
 namespace TaskManagement.Infrastructure.Persistence.Interceptors;
 
