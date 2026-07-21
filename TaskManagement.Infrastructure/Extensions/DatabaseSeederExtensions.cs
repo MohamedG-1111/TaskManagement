@@ -4,21 +4,27 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskManagement.Infrastructure.Persistence.Context;
 using TaskManagement.Infrastructure.Persistence.Seeding;
 
-namespace TaskManagement.Infrastructure.Extensions
+namespace TaskManagement.Infrastructure.Extensions;
+
+public static class DatabaseSeederExtensions
 {
-    public static class DatabaseSeederExtensions
+    public static async Task SeedDatabaseAsync(this WebApplication app)
     {
-        public static async Task SeedDatabaseAsync(this WebApplication app)
-        {
-            using var scope = app.Services.CreateScope();
+        using var scope = app.Services.CreateScope();
 
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await dbContext.Database.MigrateAsync();
+        var services = scope.ServiceProvider;
 
-            var seeder = scope.ServiceProvider
-                .GetRequiredService<DataBaseSeeding>();
+        var dbContext = services.GetRequiredService<AppDbContext>();
 
-            await seeder.SeedAllAsync();
-        }
+        await dbContext.Database.MigrateAsync();
+
+        var roleSeeder = services.GetRequiredService<RoleSeeder>();
+        await roleSeeder.SeedAsync();
+
+        var userSeeder = services.GetRequiredService<ApplicationUserSeeder>();
+        await userSeeder.SeedAsync();
+
+        var databaseSeeder = services.GetRequiredService<DataBaseSeeding>();
+        await databaseSeeder.SeedAllAsync();
     }
 }

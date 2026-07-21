@@ -6,7 +6,7 @@ namespace TaskManagement.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +26,7 @@ namespace TaskManagement.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                await app.SeedDatabaseAsync();
             }
 
             app.UseHttpsRedirection();
