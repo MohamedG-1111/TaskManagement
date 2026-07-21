@@ -28,7 +28,7 @@ namespace TaskManagement.Api
                 app.UseSwaggerUI();
                 await app.SeedDatabaseAsync();
             }
-
+            app.UseExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

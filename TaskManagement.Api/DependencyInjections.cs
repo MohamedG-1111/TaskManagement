@@ -7,6 +7,9 @@
             services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             services.AddOpenApi();
+
+            services.AddProblemDetails();
+            services.AddExceptionHandler<GlobalExceptionHandler>();
             return services;
         }
     }
