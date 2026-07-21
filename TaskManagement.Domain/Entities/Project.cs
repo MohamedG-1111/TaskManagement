@@ -1,5 +1,7 @@
 ﻿using TaskManagement.Domain.Common.Baseentity;
+using TaskManagement.Domain.Common.Results;
 using TaskManagement.Domain.Enums;
+using TaskManagement.Domain.Errors;
 
 namespace TaskManagement.Domain.Entities
 {
@@ -15,147 +17,179 @@ namespace TaskManagement.Domain.Entities
         public ProjectStatus Status { get; private set; }
         public Guid ManagerId { get; private set; }
 
-
         private Project(string name, string description, DateTimeOffset startDate,
             DateTimeOffset endDate, Guid managerId)
         {
-            SetName(name);
-            SetDescription(description);
+            Name = name;
+            Description = description;
             StartDate = startDate;
-            SetEndDate(endDate, maxTaskDueDate: null);
+            EndDate = endDate;
             ManagerId = managerId;
             Status = ProjectStatus.Planning;
         }
 
-        public static Project Create(string name, string description, DateTimeOffset startDate,
+        public static Result<Project> Create(string name, string description, DateTimeOffset startDate,
             DateTimeOffset endDate, Guid managerId)
         {
-            return new Project(name, description, startDate, endDate, managerId);
+            var nameResult = ValidateName(name);
+            if (nameResult.IsFailure)
+                return Result<Project>.Failure(nameResult.Error!);
+
+            var descriptionResult = ValidateDescription(description);
+            if (descriptionResult.IsFailure)
+                return Result<Project>.Failure(descriptionResult.Error!);
+
+            var endDateResult = ValidateEndDate(endDate, startDate, maxTaskDueDate: null);
+            if (endDateResult.IsFailure)
+                return Result<Project>.Failure(endDateResult.Error!);
+
+            var project = new Project(name, description, startDate, endDate, managerId);
+            return Result<Project>.Success(project);
         }
 
         // ---------- Basic Details (blocked once completed/archived) ----------
 
-        public void UpdateDetails(string name, string description, DateTimeOffset startDate,
+        public Result UpdateDetails(string name, string description, DateTimeOffset startDate,
             DateTimeOffset endDate, DateTimeOffset? maxTaskDueDate)
         {
-            EnsureNotCompleted();
+            var notCompletedResult = EnsureNotCompleted();
+            if (notCompletedResult.IsFailure)
+                return notCompletedResult;
 
-            SetName(name);
-            SetDescription(description);
-            StartDate = startDate;
-            SetEndDate(endDate, maxTaskDueDate);
-        }
+            var nameResult = ValidateName(name);
+            if (nameResult.IsFailure)
+                return nameResult;
 
-        private void SetName(string name)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(name);
+            var descriptionResult = ValidateDescription(description);
+            if (descriptionResult.IsFailure)
+                return descriptionResult;
 
-            if (name.Length > NameMaxLength)
-                throw new InvalidOperationException(
-                    $"Project name cannot exceed {NameMaxLength} characters.");
+            var endDateResult = ValidateEndDate(endDate, startDate, maxTaskDueDate);
+            if (endDateResult.IsFailure)
+                return endDateResult;
 
             Name = name;
+            Description = description;
+            StartDate = startDate;
+            EndDate = endDate;
+
+            return Result.Success();
         }
 
-        private void SetDescription(string description)
+        private static Result ValidateName(string name)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(description);
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure(ProjectErrors.NameRequired);
+
+            if (name.Length > NameMaxLength)
+                return Result.Failure(ProjectErrors.NameTooLong);
+
+            return Result.Success();
+        }
+
+        private static Result ValidateDescription(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                return Result.Failure(ProjectErrors.DescriptionRequired);
 
             if (description.Length > DescriptionMaxLength)
-                throw new InvalidOperationException(
-                    $"Project description cannot exceed {DescriptionMaxLength} characters.");
+                return Result.Failure(ProjectErrors.DescriptionTooLong);
 
-            Description = description;
+            return Result.Success();
         }
 
-
-        private void SetEndDate(DateTimeOffset endDate, DateTimeOffset? maxTaskDueDate)
+        private static Result ValidateEndDate(DateTimeOffset endDate, DateTimeOffset startDate,
+            DateTimeOffset? maxTaskDueDate)
         {
-            if (endDate <= StartDate)
-                throw new InvalidOperationException("End date must be after the start date.");
+            if (endDate <= startDate)
+                return Result.Failure(ProjectErrors.InvalidEndDate);
 
             if (maxTaskDueDate.HasValue && maxTaskDueDate.Value > endDate)
-                throw new InvalidOperationException(
-                    "End date cannot be earlier than the due date of any task in the project.");
+                return Result.Failure(ProjectErrors.EndDateBeforeTaskDueDate);
 
-            EndDate = endDate;
+            return Result.Success();
         }
 
-        public void ChangeManager(Guid newManagerId, bool hasStartedTasks)
+        public Result ChangeManager(Guid newManagerId, bool hasStartedTasks)
         {
-            EnsureNotCompleted();
+            var notCompletedResult = EnsureNotCompleted();
+            if (notCompletedResult.IsFailure)
+                return notCompletedResult;
 
             if (hasStartedTasks)
-                throw new InvalidOperationException(
-                    "Cannot change manager after a task has started execution.");
+                return Result.Failure(ProjectErrors.CannotChangeManager);
 
             ManagerId = newManagerId;
+            return Result.Success();
         }
 
-
-        public void EnsureCanAddTask(
-     DateTimeOffset taskStartDate,
-     DateTimeOffset taskDueDate)
+        public Result EnsureCanAddTask(DateTimeOffset taskStartDate, DateTimeOffset taskDueDate)
         {
             if (Status is ProjectStatus.Completed or ProjectStatus.Archived)
-                throw new InvalidOperationException(
-                    "Cannot add tasks to a completed or archived project.");
+                return Result.Failure(ProjectErrors.CannotAddTask);
 
             if (taskStartDate < StartDate)
-                throw new InvalidOperationException(
-                    "Task start date cannot be before the project start date.");
+                return Result.Failure(ProjectErrors.TaskStartBeforeProject);
 
             if (taskDueDate > EndDate)
-                throw new InvalidOperationException(
-                    "Task due date cannot be after the project end date.");
+                return Result.Failure(ProjectErrors.TaskDueAfterProject);
 
             if (taskDueDate <= taskStartDate)
-                throw new InvalidOperationException(
-                    "Task due date must be after its start date.");
+                return Result.Failure(ProjectErrors.InvalidTaskDates);
+
+            return Result.Success();
         }
 
-        public void EnsureCanModifyTasks()
+        public Result EnsureCanModifyTasks()
         {
             if (Status is ProjectStatus.Completed or ProjectStatus.Archived)
-                throw new InvalidOperationException("Cannot modify tasks in a completed or archived project.");
+                return Result.Failure(ProjectErrors.CannotModifyCompleted);
+
+            return Result.Success();
         }
 
         // ---------- Status Transitions ----------
 
-        public void Activate()
+        public Result Activate()
         {
             if (Status != ProjectStatus.Planning)
-                throw new InvalidOperationException("Only a Planning project can be activated.");
+                return Result.Failure(ProjectErrors.InvalidActivation);
 
             Status = ProjectStatus.Active;
+            return Result.Success();
         }
 
         /// <summary>hasIncompleteTasks is resolved by the caller via an EXISTS query.</summary>
-        public void Complete(bool hasIncompleteTasks)
+        public Result Complete(bool hasIncompleteTasks)
         {
             if (Status != ProjectStatus.Active)
-                throw new InvalidOperationException("Only active projects can be completed.");
+                return Result.Failure(ProjectErrors.InvalidCompletion);
 
             if (hasIncompleteTasks)
-                throw new InvalidOperationException(
-                    "Cannot complete the project while it still has pending or in-progress tasks.");
+                return Result.Failure(ProjectErrors.HasIncompleteTasks);
 
             Status = ProjectStatus.Completed;
+            return Result.Success();
         }
 
-        public void Archive()
+        public Result Archive()
         {
             if (Status != ProjectStatus.Completed)
-                throw new InvalidOperationException("Only completed projects can be archived.");
+                return Result.Failure(ProjectErrors.InvalidArchive);
 
             Status = ProjectStatus.Archived;
+            return Result.Success();
         }
-        public bool CanBeDeleted(bool hasTasks) => !hasTasks;
 
-        private void EnsureNotCompleted()
+        public Result CanBeDeleted(bool hasTasks) =>
+            hasTasks ? Result.Failure(ProjectErrors.HasTasks) : Result.Success();
+
+        private Result EnsureNotCompleted()
         {
             if (Status is ProjectStatus.Completed or ProjectStatus.Archived)
-                throw new InvalidOperationException("Cannot modify a completed or archived project.");
+                return Result.Failure(ProjectErrors.CannotModifyCompleted);
+
+            return Result.Success();
         }
     }
 }
