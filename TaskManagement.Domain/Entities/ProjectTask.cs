@@ -57,23 +57,23 @@ namespace TaskManagement.Domain.Entities
         {
             var titleResult = ValidateTitle(title);
             if (titleResult.IsFailure)
-                return Result<ProjectTask>.Failure(titleResult.Error);
+                return Result<ProjectTask>.Failure(titleResult.Errors);
 
             var descriptionResult = ValidateDescription(description);
             if (descriptionResult.IsFailure)
-                return Result<ProjectTask>.Failure(descriptionResult.Error);
+                return Result<ProjectTask>.Failure(descriptionResult.Errors);
 
             var datesResult = ValidateDates(startDate, dueDate);
             if (datesResult.IsFailure)
-                return Result<ProjectTask>.Failure(datesResult.Error);
+                return Result<ProjectTask>.Failure(datesResult.Errors);
 
             var projectIdResult = ValidateProjectId(projectId);
             if (projectIdResult.IsFailure)
-                return Result<ProjectTask>.Failure(projectIdResult.Error);
+                return Result<ProjectTask>.Failure(projectIdResult.Errors);
 
             var assignedUserResult = ValidateAssignedUserId(assignedUserId);
             if (assignedUserResult.IsFailure)
-                return Result<ProjectTask>.Failure(assignedUserResult.Error);
+                return Result<ProjectTask>.Failure(assignedUserResult.Errors);
 
             var task = new ProjectTask(
                 title,

@@ -33,15 +33,15 @@ namespace TaskManagement.Domain.Entities
         {
             var nameResult = ValidateName(name);
             if (nameResult.IsFailure)
-                return Result<Project>.Failure(nameResult.Error!);
+                return Result<Project>.Failure(nameResult.Errors);
 
             var descriptionResult = ValidateDescription(description);
             if (descriptionResult.IsFailure)
-                return Result<Project>.Failure(descriptionResult.Error!);
+                return Result<Project>.Failure(descriptionResult.Errors);
 
             var endDateResult = ValidateEndDate(endDate, startDate, maxTaskDueDate: null);
             if (endDateResult.IsFailure)
-                return Result<Project>.Failure(endDateResult.Error!);
+                return Result<Project>.Failure(endDateResult.Errors);
 
             var project = new Project(name, description, startDate, endDate, managerId);
             return Result<Project>.Success(project);
