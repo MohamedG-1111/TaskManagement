@@ -1,4 +1,4 @@
-using TaskManagement.Application;
+using TaskManagement.Application.Extensions;
 using TaskManagement.Infrastructure.Extensions;
 
 namespace TaskManagement.Api

@@ -24,18 +24,30 @@
     }
     public class Result<TValue> : Result
     {
-        public TValue? Value { get; }
+        private readonly TValue? _value;
+
+        public TValue Value =>
+            IsSuccess
+                ? _value!
+                : throw new InvalidOperationException(
+                    "Cannot access the value of a failed result.");
 
         public Result(TValue? value, bool isSuccess, Error? error) : base(isSuccess, error)
         {
-            Value = value;
+            _value = value;
         }
 
         public static Result<TValue> Success(TValue value) => new Result<TValue>(value, true, null);
 
         public new static Result<TValue> Failure(Error error) => new Result<TValue>(default, false, error);
 
+        public TResult Match<TResult>(Func<TValue, TResult> onSuccess, Func<Error, TResult> onFailure)
+        {
+            return IsSuccess
+                ? onSuccess(Value!)
+                : onFailure(Error!);
+        }
 
-
+        public static implicit operator Result<TValue>(TValue value) => Success(value);
     }
 }

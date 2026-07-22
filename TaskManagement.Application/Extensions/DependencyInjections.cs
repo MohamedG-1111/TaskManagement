@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskManagement.Application
+namespace TaskManagement.Application.Extensions
 {
     public static class DependencyInjections
     {
