@@ -12,8 +12,11 @@ namespace TaskManagement.Api
                      options.JsonSerializerOptions.Converters.Add(
                          new JsonStringEnumConverter());
                  });
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            services.AddOpenApi();
+            // Discovers Minimal API endpoints and exposes metadata for OpenAPI/Swagger.
+            services.AddEndpointsApiExplorer();
+
+            // Generates the OpenAPI (Swagger) document used by Swagger UI.
+            services.AddSwaggerGen();
 
             services.AddProblemDetails();
             services.AddExceptionHandler<GlobalExceptionHandler>();
