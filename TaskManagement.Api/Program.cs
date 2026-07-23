@@ -28,7 +28,7 @@ namespace TaskManagement.Api
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
+                app.UseSwagger(); // run Middleware that make documentarion file(Json) available to use
                 app.UseSwaggerUI();
                 await app.SeedDatabaseAsync();
             }
