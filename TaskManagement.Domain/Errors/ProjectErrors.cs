@@ -97,4 +97,8 @@ public static class ProjectErrors
       Error.Failure(
           "Project.DeleteFailed",
           "Failed to delete the project.");
+    public static readonly Error NameAlreadyExists =
+        Error.Conflict(
+       "Project.NameAlreadyExists",
+       "A project with the same name already exists.");
 }

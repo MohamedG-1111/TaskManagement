@@ -2,10 +2,14 @@
 
 namespace TaskManagement.Api.Common.Responses
 {
+
     public class ApiMeta
     {
         public string TraceId { get; init; } = string.Empty;
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public PaginationMeta? Pagination { get; init; }
+    }
+
+    public class PaginatedApiMeta : ApiMeta
+    {
+        public PaginationMeta Pagination { get; init; } = default!;
     }
 }

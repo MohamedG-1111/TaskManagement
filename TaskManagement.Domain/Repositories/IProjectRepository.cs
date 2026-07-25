@@ -10,6 +10,7 @@ namespace TaskManagement.Domain.Repositories
     public interface IProjectRepository : IRepository<Project>
     {
         Task<bool> HasTasksAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<bool> IsExistingNameAsync(string name, CancellationToken cancellationToken);
 
     }
 }

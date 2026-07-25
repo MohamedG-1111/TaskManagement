@@ -24,5 +24,11 @@ namespace TaskManagement.Infrastructure.Repositories
         public async Task<bool> HasTasksAsync(Guid projectId, CancellationToken cancellationToken) =>
             await context.Tasks
                 .AnyAsync(t => t.ProjectId == projectId, cancellationToken);
+
+        public async Task<bool> IsExistingNameAsync(string name, CancellationToken cancellationToken)
+        {
+            return await context.Projects
+                .AnyAsync(p => p.Name.ToLower() == name.ToLower(), cancellationToken);
+        }
     }
 }

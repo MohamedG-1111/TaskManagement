@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskManagement.Api.Common.Responses;
+using TaskManagement.Application.Features.Projects.Commands.CreateProject;
 using TaskManagement.Application.Features.Projects.Commands.DeleteProject;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Filters;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Responses;
@@ -56,12 +57,22 @@ namespace TaskManagement.Api.Controllers
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await mediator.Send(new DeleteProjectByIdCommand(id));
 
-            return HandleResult(result);
+            return HandleResult(result, StatusCodes.Status204NoContent, "Project Deleted successfully");
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateProject(CreateProjectCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return HandleResult(result, StatusCodes.Status201Created, "Project created successfully");
+
         }
     }
 }

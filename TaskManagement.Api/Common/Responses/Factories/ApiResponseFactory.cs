@@ -15,7 +15,7 @@ public static class ApiResponseFactory
                 Data = paged.Items,
                 IsSuccess = true,
                 Message = message,
-                Meta = new ApiMeta
+                Meta = new PaginatedApiMeta
                 {
                     TraceId = traceId,
                     Pagination = new PaginationMeta(
