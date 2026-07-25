@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Repositories;
 using TaskManagement.Infrastructure.Persistence.Context;
+using TaskStatus = TaskManagement.Domain.Enums.TaskStatus;
 
 namespace TaskManagement.Infrastructure.Repositories
 {
@@ -42,6 +43,14 @@ namespace TaskManagement.Infrastructure.Repositories
             return await context.Tasks
                 .Where(x => x.ProjectId == projectId)
                 .MaxAsync(x => (DateTimeOffset?)x.DueDate, cancellationToken);
+        }
+
+        public async Task<bool> HasIncompleteTasks(Guid projectId, CancellationToken cancellationToken)
+        {
+            return await context.Tasks
+                .AnyAsync(x => x.ProjectId == projectId &&
+                ((x.Status == TaskStatus.InProgress) || x.Status == TaskStatus.Pending), cancellationToken);
+
         }
     }
 }

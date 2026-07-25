@@ -7,6 +7,8 @@ using TaskManagement.Application.Features.Projects.Commands.CreateProject;
 using TaskManagement.Application.Features.Projects.Commands.DeleteProject;
 using TaskManagement.Application.Features.Projects.Commands.UpdateProject;
 using TaskManagement.Application.Features.Projects.Commands.UpdateProject.Requests;
+using TaskManagement.Application.Features.Projects.Commands.UpdateProjectStatus;
+using TaskManagement.Application.Features.Projects.Commands.UpdateProjectStatus.Requests;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Filters;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Responses;
 using TaskManagement.Application.Features.Projects.Queries.GetProjectById;
@@ -93,6 +95,30 @@ namespace TaskManagement.Api.Controllers
                 request.EndDate);
             var result = await mediator.Send(command);
             return HandleResult(result, message: "Project updated successfully");
+        }
+
+        [HttpPatch("{id:guid}/status")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
+        [SwaggerOperation(
+    Summary = "Update project status",
+    Description = """
+                  Updates the status of a project.
+                  Allowed values:
+                  - Active
+                  - Completed
+                  - Cancelled
+                  - Archived
+                  """)]
+        public async Task<IActionResult> UpdateProjectStatus([FromRoute] Guid id, [FromBody] UpdateProjectStatusRequest request)
+        {
+            var command = new UpdateProjectStatusCommand(id, request.Status);
+
+            var result = await mediator.Send(command);
+
+            return HandleResult(result, message: "Project status updated successfully");
         }
     }
 }

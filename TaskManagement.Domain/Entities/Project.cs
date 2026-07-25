@@ -171,7 +171,18 @@ namespace TaskManagement.Domain.Entities
             Status = ProjectStatus.Completed;
             return Result.Success();
         }
+        public Result Cancel()
+        {
+            if (Status != ProjectStatus.Planning &&
+                Status != ProjectStatus.Active)
+            {
+                return Result.Failure(ProjectErrors.InvalidCancellation);
+            }
 
+            Status = ProjectStatus.Cancelled;
+
+            return Result.Success();
+        }
         public Result Archive()
         {
             if (Status != ProjectStatus.Completed)

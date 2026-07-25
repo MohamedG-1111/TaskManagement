@@ -101,4 +101,11 @@ public static class ProjectErrors
         Error.Conflict(
        "Project.NameAlreadyExists",
        "A project with the same name already exists.");
+    public static readonly Error InvalidCancellation = Error.Conflict(
+     "Project.InvalidCancellation",
+    "Only projects with Planning or Active status can be cancelled.");
+
+    public static readonly Error InvalidStatus = Error.Validation(
+    "Project.InvalidStatus",
+    "The specified project status is invalid.");
 }
