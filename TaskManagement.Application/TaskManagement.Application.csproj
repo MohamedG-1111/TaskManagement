@@ -18,8 +18,4 @@
     <ProjectReference Include="..\TaskManagement.Domain\TaskManagement.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Projects\Commands\" />
-  </ItemGroup>
-
 </Project>

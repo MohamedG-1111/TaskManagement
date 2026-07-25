@@ -4,7 +4,7 @@ namespace TaskManagement.Domain.Repositories
 {
     public interface IUnitOfWork
     {
-        IRepository<T> Repository<T>() where T : BaseEntity;
+        IProjectRepository ProjectRepository { get; }
 
         Task<int> SaveChangesAsync();
 

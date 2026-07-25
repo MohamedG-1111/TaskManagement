@@ -22,7 +22,7 @@ namespace TaskManagement.Application.Features.Projects.Queries.GetAllProjects
             GetAllProjectsQuery request,
             CancellationToken cancellationToken)
         {
-            var query = unitOfWork.Repository<Project>()
+            var query = unitOfWork.ProjectRepository
                 .GetAsQuery();
 
             if (!string.IsNullOrWhiteSpace(request.Filter.Search))

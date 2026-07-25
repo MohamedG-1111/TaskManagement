@@ -17,7 +17,7 @@ namespace TaskManagement.Application.Features.Projects.Queries.GetProjectById
         }
         public async Task<Result<GetProjectByIdResponse>> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
         {
-            var response = await unitOfWork.Repository<Project>().GetAsQuery()
+            var response = await unitOfWork.ProjectRepository.GetAsQuery()
                 .Where(x => x.Id == request.Id)
                 .Select(x => new GetProjectByIdResponse
                 (

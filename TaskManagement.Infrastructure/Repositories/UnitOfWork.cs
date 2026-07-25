@@ -9,25 +9,20 @@ namespace TaskManagement.Infrastructure.Repositories
     {
         private readonly AppDbContext context;
 
-        private ConcurrentDictionary<Type, object> Repositories { get; set; }
-           = new ConcurrentDictionary<Type, object>();
 
-        public UnitOfWork(AppDbContext context)
+
+        public IProjectRepository ProjectRepository { get; }
+
+        public UnitOfWork(AppDbContext context, IProjectRepository ProjectRepository)
         {
             this.context = context;
+            this.ProjectRepository = ProjectRepository;
+
+            Console.WriteLine($"/n/n ContextFromProjectUnitOfWork : {context.GetHashCode()}\n\n");
         }
 
 
         public async Task<int> SaveChangesAsync() => await context.SaveChangesAsync();
 
-        public IRepository<T> Repository<T>() where T : BaseEntity
-        {
-            var type = typeof(T);
-            if (Repositories.TryGetValue(type, out var repo))
-                return (IRepository<T>)repo;
-            var newRepo = new Repository<T>(context);
-            Repositories[type] = newRepo;
-            return newRepo;
-        }
     }
 }

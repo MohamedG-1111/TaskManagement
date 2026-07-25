@@ -41,6 +41,8 @@ namespace TaskManagement.Infrastructure.Extensions
             services.AddScoped<RoleSeeder>();
             services.AddScoped<ApplicationUserSeeder>();
             services.AddScoped<DataBaseSeeding>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+
 
 
             return services;

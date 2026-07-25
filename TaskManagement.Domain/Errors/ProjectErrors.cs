@@ -93,4 +93,8 @@ public static class ProjectErrors
         Error.Conflict(
             "Project.HasTasks",
             "Cannot delete a project that still contains tasks.");
+    public static readonly Error DeleteFailed =
+      Error.Failure(
+          "Project.DeleteFailed",
+          "Failed to delete the project.");
 }

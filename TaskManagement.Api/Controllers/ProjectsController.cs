@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskManagement.Api.Common.Responses;
+using TaskManagement.Application.Features.Projects.Commands.DeleteProject;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Filters;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Responses;
 using TaskManagement.Application.Features.Projects.Queries.GetProjectById;
@@ -49,6 +50,17 @@ namespace TaskManagement.Api.Controllers
        [FromQuery] ProjectFilter filter)
         {
             var result = await mediator.Send(new GetAllProjectsQuery(parameters, filter));
+            return HandleResult(result);
+        }
+
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await mediator.Send(new DeleteProjectByIdCommand(id));
+
             return HandleResult(result);
         }
     }

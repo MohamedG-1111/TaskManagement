@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TaskManagement.Application.Abstractions.Identity;
 using TaskManagement.Domain.Common.Baseentity;
+
 namespace TaskManagement.Infrastructure.Persistence.Interceptors;
 
 public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
@@ -17,10 +18,23 @@ public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         DbContextEventData eventData,
         InterceptionResult<int> result)
     {
-        var context = eventData.Context;
+        ApplySoftDelete(eventData.Context);
+        return result;
+    }
 
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
+    {
+        ApplySoftDelete(eventData.Context);
+        return ValueTask.FromResult(result);
+    }
+
+    private void ApplySoftDelete(DbContext? context)
+    {
         if (context is null)
-            return result;
+            return;
 
         foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
@@ -33,7 +47,5 @@ public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
             entry.Entity.DeletedAt = DateTimeOffset.UtcNow;
             entry.Entity.DeletedBy = _currentUserService.UserId.ToString();
         }
-
-        return result;
     }
 }

@@ -13,6 +13,7 @@ public class Repository<T> : IRepository<T>
     {
         _context = context;
         _dbSet = context.Set<T>();
+        Console.WriteLine($"/n/n ContextFromGenericRepository : {context.GetHashCode()}\n\n");
     }
 
     public async Task AddAsync(T entity)
@@ -21,10 +22,10 @@ public class Repository<T> : IRepository<T>
     public async Task AddRangeAsync(IEnumerable<T> entities)
         => await _dbSet.AddRangeAsync(entities);
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(Guid id)
         => await _dbSet.FindAsync(id);
 
-    public async Task<T?> FindAsync(int id)
+    public async Task<T?> FindAsync(Guid id)
         => await _dbSet.FindAsync(id);
 
     public void Update(T entity)
