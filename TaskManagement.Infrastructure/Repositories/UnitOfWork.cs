@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using TaskManagement.Domain.Common.Baseentity;
 using TaskManagement.Domain.Repositories;
 using TaskManagement.Infrastructure.Persistence.Context;
 
@@ -19,7 +20,7 @@ namespace TaskManagement.Infrastructure.Repositories
 
         public async Task<int> SaveChangesAsync() => await context.SaveChangesAsync();
 
-        public IRepository<T> Repository<T>() where T : class
+        public IRepository<T> Repository<T>() where T : BaseEntity
         {
             var type = typeof(T);
             if (Repositories.TryGetValue(type, out var repo))

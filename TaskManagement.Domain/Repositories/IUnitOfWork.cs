@@ -1,8 +1,10 @@
-﻿namespace TaskManagement.Domain.Repositories
+﻿using TaskManagement.Domain.Common.Baseentity;
+
+namespace TaskManagement.Domain.Repositories
 {
     public interface IUnitOfWork
     {
-        IRepository<T> Repository<T>() where T : class;
+        IRepository<T> Repository<T>() where T : BaseEntity;
 
         Task<int> SaveChangesAsync();
 

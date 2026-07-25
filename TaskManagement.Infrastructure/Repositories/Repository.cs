@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManagement.Domain.Common.Baseentity;
 using TaskManagement.Domain.Repositories;
 using TaskManagement.Infrastructure.Persistence.Context;
 
 public class Repository<T> : IRepository<T>
-    where T : class
+    where T : BaseEntity
 {
     private readonly AppDbContext _context;
     private readonly DbSet<T> _dbSet;
