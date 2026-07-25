@@ -17,6 +17,7 @@ public class RoleSeeder
         var roles = new[]
         {
             ApplicationRoles.Admin,
+            ApplicationRoles.SuperAdmin,
             ApplicationRoles.Employee
         };
 

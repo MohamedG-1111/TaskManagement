@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TaskManagement.Application.Features.Projects.Queries.Responses;
 using TaskManagement.Domain.Common.Results;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Errors;

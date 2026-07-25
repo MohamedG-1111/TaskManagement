@@ -28,7 +28,7 @@ namespace TaskManagement.Api.Common.Responses.Factories
                     .ToDictionary(
                     g => g.Key,
                     g => g.Select(x => x.Message).ToArray());
-                problem.Extensions["Error"] = errors;
+                problem.Extensions["errors"] = errors;
 
             }
             return problem;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
-using TaskManagement.Application.Features.Projects.Queries.Responses;
 using TaskManagement.Domain.Common.Results;
 
 namespace TaskManagement.Application.Features.Projects.Queries.GetProjectById

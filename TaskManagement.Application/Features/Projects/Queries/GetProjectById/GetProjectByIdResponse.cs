@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Domain.Enums;
 
-namespace TaskManagement.Application.Features.Projects.Queries.Responses
+namespace TaskManagement.Application.Features.Projects.Queries.GetProjectById
 {
     public sealed record GetProjectByIdResponse(
     Guid Id,

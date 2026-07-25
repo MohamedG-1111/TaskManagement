@@ -16,8 +16,10 @@ namespace TaskManagement.Api
             services.AddEndpointsApiExplorer();
 
             // Generates the OpenAPI (Swagger) document used by Swagger UI.
-            services.AddSwaggerGen();
-
+            services.AddSwaggerGen(options =>
+            {
+                options.EnableAnnotations();
+            });
             services.AddProblemDetails();
             services.AddExceptionHandler<GlobalExceptionHandler>();
             return services;
