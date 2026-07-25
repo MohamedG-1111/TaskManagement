@@ -5,6 +5,8 @@ using Swashbuckle.AspNetCore.Annotations;
 using TaskManagement.Api.Common.Responses;
 using TaskManagement.Application.Features.Projects.Commands.CreateProject;
 using TaskManagement.Application.Features.Projects.Commands.DeleteProject;
+using TaskManagement.Application.Features.Projects.Commands.UpdateProject;
+using TaskManagement.Application.Features.Projects.Commands.UpdateProject.Requests;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Filters;
 using TaskManagement.Application.Features.Projects.Queries.GetAllProjects.Responses;
 using TaskManagement.Application.Features.Projects.Queries.GetProjectById;
@@ -67,12 +69,30 @@ namespace TaskManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateProject(CreateProjectCommand command)
         {
             var result = await mediator.Send(command);
 
             return HandleResult(result, StatusCodes.Status201Created, "Project created successfully");
 
+        }
+
+
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> UpdateProject([FromRoute] Guid id, [FromBody] UpdateProjectRequest request)
+        {
+            var command = new UpdateProjectCommand(
+                id,
+                request.Name,
+                request.Description,
+                request.StartDate,
+                request.EndDate);
+            var result = await mediator.Send(command);
+            return HandleResult(result, message: "Project updated successfully");
         }
     }
 }

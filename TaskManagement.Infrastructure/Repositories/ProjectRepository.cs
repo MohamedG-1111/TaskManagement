@@ -30,5 +30,18 @@ namespace TaskManagement.Infrastructure.Repositories
             return await context.Projects
                 .AnyAsync(p => p.Name.ToLower() == name.ToLower(), cancellationToken);
         }
+
+        public async Task<bool> ExistsByNameExceptAsync(Guid projectId, string name, CancellationToken cancellationToken)
+        {
+            return await context.Projects
+                            .AnyAsync(p => p.Name.ToLower() == name.ToLower() && p.Id != projectId, cancellationToken);
+        }
+
+        public async Task<DateTimeOffset?> GetMaxTaskDueDateAsync(Guid projectId, CancellationToken cancellationToken)
+        {
+            return await context.Tasks
+                .Where(x => x.ProjectId == projectId)
+                .MaxAsync(x => (DateTimeOffset?)x.DueDate, cancellationToken);
+        }
     }
 }

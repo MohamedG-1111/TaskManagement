@@ -11,6 +11,9 @@ namespace TaskManagement.Domain.Repositories
     {
         Task<bool> HasTasksAsync(Guid projectId, CancellationToken cancellationToken);
         Task<bool> IsExistingNameAsync(string name, CancellationToken cancellationToken);
+        Task<bool> ExistsByNameExceptAsync(Guid projectId, string name, CancellationToken cancellationToken);
+
+        public Task<DateTimeOffset?> GetMaxTaskDueDateAsync(Guid projectId, CancellationToken cancellationToken);
 
     }
 }

@@ -30,7 +30,7 @@ namespace TaskManagement.Application.Features.Projects.Commands.CreateProject
                 return Result<Guid>.Failure(result.Errors);
 
             await unitOfWork.ProjectRepository.AddAsync(result.Value);
-            return await unitOfWork.SaveChangesAsync() > 0 ?
+            return await unitOfWork.SaveChangesAsync(cancellationToken) > 0 ?
                   Result<Guid>.Success(result.Value.Id)
                   : Result<Guid>.Failure(Error.Failure("Project.Unexpected", "An unexpected error occurred."));
         }

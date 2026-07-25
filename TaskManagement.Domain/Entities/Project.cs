@@ -50,7 +50,7 @@ namespace TaskManagement.Domain.Entities
         // ---------- Basic Details (blocked once completed/archived) ----------
 
         public Result UpdateDetails(string name, string description, DateTimeOffset startDate,
-            DateTimeOffset endDate, DateTimeOffset? maxTaskDueDate)
+            DateTimeOffset endDate, DateTimeOffset? maxTaskDueDate = null)
         {
             var notCompletedResult = EnsureNotCompleted();
             if (notCompletedResult.IsFailure)

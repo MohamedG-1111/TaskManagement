@@ -6,7 +6,7 @@ namespace TaskManagement.Domain.Repositories
     {
         IProjectRepository ProjectRepository { get; }
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     }
 }

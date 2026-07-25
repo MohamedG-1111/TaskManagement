@@ -33,7 +33,7 @@ namespace TaskManagement.Application.Features.Projects.Commands.DeleteProject
             unitOfWork.ProjectRepository.Delete(project);
 
 
-            return await unitOfWork.SaveChangesAsync() > 0
+            return await unitOfWork.SaveChangesAsync(cancellationToken) > 0
                 ? Result.Success()
                 : Result.Failure(ProjectErrors.DeleteFailed);
         }
