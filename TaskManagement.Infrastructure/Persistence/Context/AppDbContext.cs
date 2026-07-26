@@ -9,8 +9,7 @@ using TaskManagement.Infrastructure.Persistence.Configuration;
 
 namespace TaskManagement.Infrastructure.Persistence.Context;
 
-public class AppDbContext
-    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -20,7 +19,8 @@ public class AppDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationUserConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfiguration).Assembly
+            , type => type.Namespace == "TaskManagement.Infrastructure.Persistence.Configuration");
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using TaskManagement.Domain.Contants;
 using TaskManagement.Infrastructure.Identity;
 
 namespace TaskManagement.Infrastructure.Persistence.Seeding;

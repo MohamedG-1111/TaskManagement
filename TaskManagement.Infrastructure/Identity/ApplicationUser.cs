@@ -9,7 +9,7 @@ namespace TaskManagement.Infrastructure.Identity
 
         public string Role { get; set; } = null!;
 
-        public List<Project>? ManagedProjects { get; set; } = new List<Project>();
-        public List<ProjectTask>? UserTasks { get; set; } = new List<ProjectTask>();
+        public bool IsDeleted { get; set; }
+
     }
 }

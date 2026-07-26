@@ -20,16 +20,21 @@ namespace TaskManagement.Infrastructure.Extensions
             services.AddScoped<AuditInterceptor>();
             services.AddScoped<SoftDeleteInterceptor>();
 
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
 
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"), sql =>
+                sql.MigrationsHistoryTable("__ApplicationMigrationTable")).EnableSensitiveDataLogging(); ;
                 options.AddInterceptors(
       sp.GetRequiredService<AuditInterceptor>(),
       sp.GetRequiredService<SoftDeleteInterceptor>());
+            });
+
+            services.AddDbContext<IdentityAppDbContext>(options =>
+            {
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"), sql =>
+                 sql.MigrationsHistoryTable("__IdentityMigrationTable"))
+                .EnableSensitiveDataLogging();
             });
 
 
