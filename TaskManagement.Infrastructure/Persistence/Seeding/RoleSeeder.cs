@@ -14,14 +14,9 @@ public class RoleSeeder
 
     public async Task SeedAsync()
     {
-        var roles = new[]
-        {
-            ApplicationRoles.Admin,
-            ApplicationRoles.SuperAdmin,
-            ApplicationRoles.Employee
-        };
 
-        foreach (var role in roles)
+
+        foreach (var role in ApplicationRoles.All)
         {
             if (!await _roleManager.RoleExistsAsync(role))
             {
