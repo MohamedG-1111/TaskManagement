@@ -107,12 +107,13 @@ namespace TaskManagement.Api.Controllers
     Description = """
                   Updates the status of a project.
                   Allowed values:
+                  - Planning
                   - Active
                   - Completed
                   - Cancelled
                   - Archived
                   """)]
-        public async Task<IActionResult> UpdateProjectStatus([FromRoute] Guid id, [FromBody] UpdateProjectStatusRequest request)
+        public async Task<IActionResult> UpdateProjectStatus([FromRoute] Guid id, [FromQuery] UpdateProjectStatusRequest request)
         {
             var command = new UpdateProjectStatusCommand(id, request.Status);
 

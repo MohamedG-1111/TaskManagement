@@ -202,5 +202,17 @@ namespace TaskManagement.Domain.Entities
 
             return Result.Success();
         }
+        public Result Reopen()
+        {
+            if (Status == ProjectStatus.Planning)
+                return Result.Failure(ProjectErrors.AlreadyPlanning);
+
+            if (Status != ProjectStatus.Cancelled)
+                return Result.Failure(ProjectErrors.InvalidReopen);
+
+            Status = ProjectStatus.Planning;
+
+            return Result.Success();
+        }
     }
 }

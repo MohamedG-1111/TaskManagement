@@ -39,6 +39,8 @@ public class UpdateProjectStatusCommandHandler
             ProjectStatus.Archived =>
                 project.Archive(),
 
+            ProjectStatus.Planning => project.Reopen(),
+
             _ => Result.Failure(ProjectErrors.InvalidStatus)
         };
 

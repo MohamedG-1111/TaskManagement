@@ -108,4 +108,14 @@ public static class ProjectErrors
     public static readonly Error InvalidStatus = Error.Validation(
     "Project.InvalidStatus",
     "The specified project status is invalid.");
+
+    public static readonly Error AlreadyPlanning =
+    Error.Conflict(
+        "Project.AlreadyPlanning",
+        "The project is already in planning status.");
+
+    public static readonly Error InvalidReopen =
+    Error.Validation(
+        "Project.InvalidReopen",
+        "Only cancelled projects can be reopened.");
 }
