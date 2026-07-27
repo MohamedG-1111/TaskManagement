@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagement.Application.Abstractions.Identity;
+using TaskManagement.Application.Common.Modules;
 using TaskManagement.Application.Common.Settings;
 
 namespace TaskManagement.Infrastructure.Identity
