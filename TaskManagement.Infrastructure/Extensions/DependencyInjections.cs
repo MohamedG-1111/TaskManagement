@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskManagement.Application.Abstractions.Identity;
+using TaskManagement.Application.Common.Settings;
 using TaskManagement.Domain.Repositories;
 using TaskManagement.Infrastructure.Identity;
 using TaskManagement.Infrastructure.Persistence.Context;
@@ -45,8 +46,10 @@ namespace TaskManagement.Infrastructure.Extensions
             services.AddScoped<IDataSeeder, ProjectSeeder>();
             services.AddScoped<RoleSeeder>();
             services.AddScoped<ApplicationUserSeeder>();
+            services.AddScoped<IAccessTokenService, AccessTokenService>();
             services.AddScoped<DataBaseSeeding>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.Configure<JwtSettings>(config.GetSection(JwtSettings.SectionName));
 
 
 

@@ -3,22 +3,23 @@ using Microsoft.AspNetCore.Identity;
 using TaskManagement.Infrastructure.Identity;
 using TaskManagement.Infrastructure.Persistence.Context;
 
-namespace TaskManagement.Api
+namespace TaskManagement.Api.Extensions
 {
     public static class DependencyInjections
     {
-        public static IServiceCollection AddPresentation(this IServiceCollection services)
+        public static IServiceCollection AddPresentation(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddControllers()
                 .AddJsonOptions(options =>
-                 {
-                     options.JsonSerializerOptions.Converters.Add(
-                         new JsonStringEnumConverter());
-                 });
-            // Discovers Minimal API endpoints and exposes metadata for OpenAPI/Swagger.
+                {
+                    options.JsonSerializerOptions.Converters.Add(
+                        new JsonStringEnumConverter());
+                });
+
             services.AddEndpointsApiExplorer();
 
-            // Generates the OpenAPI (Swagger) document used by Swagger UI.
             services.AddSwaggerGen(options =>
             {
                 options.EnableAnnotations();
@@ -30,6 +31,9 @@ namespace TaskManagement.Api
 
             services.AddProblemDetails();
             services.AddExceptionHandler<GlobalExceptionHandler>();
+
+            services.AddJwtAuthentication(configuration);
+
             return services;
         }
     }

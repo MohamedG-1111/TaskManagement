@@ -1,3 +1,5 @@
+using TaskManagement.Api.Extensions;
+using TaskManagement.Application.Abstractions.Identity;
 using TaskManagement.Application.Extensions;
 using TaskManagement.Infrastructure.Extensions;
 
@@ -14,15 +16,13 @@ namespace TaskManagement.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddPresentation()
+            builder.Services.AddPresentation(builder.Configuration)
                 .AddApplication()
                 .AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
-            app.MapGet("/error", (HttpContext context) =>
-            {
-                throw new Exception("Test sql");
-            });
+
+
 
 
             // Configure the HTTP request pipeline.
